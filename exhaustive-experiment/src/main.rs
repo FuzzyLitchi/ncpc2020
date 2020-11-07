@@ -10,8 +10,8 @@ enum TestResult {
 
 #[derive(Debug, Copy, Clone)]
 struct Component {
-    x: f64,
-    y: f64,
+    x: i64,
+    y: i64,
     test: TestResult,
 }
 
@@ -19,7 +19,7 @@ impl Component {
     #[inline]
     fn below(&self, other: &Self) -> bool {
         let y_diff = other.y - self.y;
-        (other.x - self.x).abs() <= y_diff / 2.
+        2 * (other.x - self.x).abs() <= y_diff
     }
 }
 
@@ -48,7 +48,7 @@ fn main() {
     let mut counted = BTreeSet::new();
     let mut to_remove = Vec::with_capacity(n);
 
-    components.sort_by(|c, o| o.y.partial_cmp(&c.y).unwrap());
+    components.sort_by_key(|c| c.y);
 
     for (i, component) in components.iter().enumerate() {
         match component.test {
