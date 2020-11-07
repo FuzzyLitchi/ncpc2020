@@ -67,38 +67,33 @@ fn main() -> Result<(), Error> {
     // println!("{:?}", coin_stacks);
     
     loop {
-        match coin_stacks.len() {
-            0 => {
+        fn find(list: &[CoinStack]) -> Option<usize> {
+            list.iter().position(|s| s.height >= 1)
+        }
+
+        let first = find(&coin_stacks);
+        match first {
+            None => {
                 println!("yes");
-                println!("{} bytes", moves.len()*std::mem::size_of::<(usize,usize)>());
-                for r#move in moves {
-                    println!("{} {}", r#move.0, r#move.1);
+                for m in moves {
+                    println!("{} {}", m.0, m.1);
                 }
                 break;
             },
-            1 => {
-                println!("no");
-                break;
-            } 
-            _ => {
-                let a_h;
-                let b_h;
-                {
-                    let a = &coin_stacks[0];
-                    let b = &coin_stacks[1];
-                    // dbg!(a, b);
-                    moves.push((a.location,b.location));
-                    a_h = a.height;
-                    b_h = b.height;
-                }
-
-                match b_h - 1 {
-                    0 => {coin_stacks.remove(1);},
-                    v => coin_stacks[1].height = v,
-                }
-                match a_h - 1 {
-                    0 => {coin_stacks.remove(0);},
-                    v => coin_stacks[0].height = v,
+            Some(first) => {
+                // dbg!(first, &coin_stacks[first+1..]);
+                let second = find(&coin_stacks[first+1..]).map(|i| i+1+first);
+                match second {
+                    None => {
+                        println!("no");
+                        break;
+                    },
+                    Some(second) => {
+                        // dbg!(first, second, &coin_stacks);
+                        moves.push((coin_stacks[first].location, coin_stacks[second].location));
+                        coin_stacks[first].height -= 1;
+                        coin_stacks[second].height -= 1;
+                    }
                 }
             }
         }
