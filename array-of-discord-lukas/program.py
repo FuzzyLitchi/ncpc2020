@@ -15,7 +15,7 @@ for i in range(0, amount):
         prev = int(newSet[i-1])
         prev_integers = list(str(prev))
         current_integers = list(str(current))
-        if(int(prev)>0 and (int(current_integers[0]) == 1 and all(int(current_integers[i]) == 0 for i in range(1, len(current_integers))) or len(current_integers)==1)):
+        if(len(current_integers)<= 1 and int(prev)>0 and (int(current_integers[0]) == 1 and all(int(current_integers[i]) == 0 for i in range(1, len(current_integers))) or len(current_integers)==1)):
             sorted = False
             current_integers = ['0']
             newSet[i] = ("".join(current_integers))
@@ -23,7 +23,6 @@ for i in range(0, amount):
         if (len(prev_integers) == len(current_integers)):
             for j in range (0, len(prev_integers)):
                 if (int(prev_integers[j]) < 9):
-
                     temp_prev = prev_integers.copy()
                     temp_prev[j] = str(9)
                     if (int("".join(temp_prev)) > int("".join(current_integers))):
